@@ -1,5 +1,5 @@
-#pragma config(Motor,  port2,           backRight,     tmotorVex393_MC29, openLoop, reversed)
-#pragma config(Motor,  port3,           frontRight,    tmotorVex393_MC29, openLoop, reversed)
+#pragma config(Motor,  port2,           backRight,     tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port3,           frontRight,    tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port4,           clawMotor,     tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port5,           armMotor,      tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port8,           backLeft,      tmotorVex393_MC29, openLoop)
@@ -79,54 +79,50 @@ task autonomous()
 
 task usercontrol()
 {
-	float xMovement;
-	float	rotMovement;
+	float xch3Movement;
+	float	xch2Movement;
   // User control code here, inside the loop
 
   while (true)
   {
   	// Get the dedadbanded x and rot values.
   	if( abs(vexRT[Ch3]) > 15 ) {
-  		xMovement = vexRT[Ch3];
+  		xch3Movement = vexRT[Ch3];
 		}
 		else {
-			xMovement = 0;
+			xch3Movement = 0;
 		}
-		if( abs(vexRT[Ch4]) > 15 ) {
-			rotMovement = vexRT[Ch2];
+		if( abs(vexRT[Ch2]) > 15 ) {
+			xch2Movement = vexRT[Ch2];
 		}
 		else {
-			rotMovement = 0;
+			xch2Movement = 0;
 		}
 
 		// Arcade Drive
-		motor[frontRight] = xMovement + rotMovement;
-		motor[backRight] = xMovement + rotMovement;
-		motor[frontLeft] = xMovement - rotMovement;
-		motor[backLeft] = xMovement - rotMovement;
+		motor[frontRight] = xch2Movement;
+		motor[backRight] = xch2Movement;
+		motor[frontLeft] = xch3Movement;
+		motor[backLeft] = xch3Movement;
 
-		// We set the axis to control the arm and claw
-		motor[armMotor] = vexRT[Ch2];
-		motor[clawMotor] = vexRT[Ch1];
+		if( vexRT[Btn6U] == 1 ) {
+			motor[armMotor] = 127;
+		}
+		else if( vexRT[Btn6D] == 1 ) {
+			motor[armMotor] = -127;
+		}
+		else {
+			motor[armMotor] = 15;
+		}
 
-		//if( vexRT[Btn6U] == 1 ) {
-		//	motor[armMotor] = 127;
-		//}
-		//else if( vexRT[Btn6D] == 1 ) {
-		//	motor[armMotor] = -127;
-		//}
-		//else {
-		//	motor[armMotor] = 15;
-		//}
-
-		//if( vexRT[Btn5U] == 1 ) {
-		//	motor[clawMotor] = 35;
-		//}
-		//else if( vexRT[Btn5D] == 1 ) {
-		//	motor[clawMotor] = -35;
-		//}
-		//else {
-		//	motor[clawMotor] = 0;
-		//}
+		if( vexRT[Btn5U] == 1 ) {
+			motor[clawMotor] = 35;
+		}
+		else if( vexRT[Btn5D] == 1 ) {
+			motor[clawMotor] = -35;
+		}
+		else {
+			motor[clawMotor] = 0;
+		}
   }
 }
